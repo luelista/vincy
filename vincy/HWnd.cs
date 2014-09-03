@@ -38,7 +38,10 @@ namespace vincy
 
         [DllImport("user32.dll")]
         public static extern bool ShowWindow(IntPtr hWnd, uint nCmdShow);
-        
+
+        [DllImport("kernel32.dll", SetLastError = true)]
+        private static extern int GetShortPathName(String pathName, StringBuilder shortName, int cbShortName);
+
         public IntPtr hWnd;
 
         public HWnd(IntPtr _hWnd)
@@ -65,6 +68,16 @@ namespace vincy
                 BringWindowToTop(hWnd);
                 ShowWindow(hWnd, SW_SHOW);
             }
+        }
+
+        public static string GetShortName(string file) {
+
+            StringBuilder sb = new StringBuilder(300);
+            int n = GetShortPathName(file, sb, 300);
+            if (n == 0) // check for errors
+                throw new Exception("Win32 error: " + Marshal.GetLastWin32Error());
+            else
+                return sb.ToString();
         }
     }
 }

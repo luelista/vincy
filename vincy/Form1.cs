@@ -18,7 +18,7 @@ namespace vincy
         List<Host> hostlist = new List<Host>();
         Dictionary<int, int> sshvncassoc = new Dictionary<int, int>();
         public string rechner;
-
+        
         public Form1()
         {
             InitializeComponent();
@@ -92,6 +92,7 @@ namespace vincy
         {
             var sshconf = Path.Combine(confdir, "ssh_client_conf.txt");
             var known_hosts = Path.Combine(confdir, "known_hosts.txt");
+            known_hosts = HWnd.GetShortName(known_hosts);
             Random rand = new Random();
             var locport = 53000 + rand.Next(1, 10000);
             var idfile = Path.Combine(confdir, "id_rsa");
@@ -112,7 +113,7 @@ namespace vincy
             Thread.Sleep(200);
             Application.DoEvents();
 
-            var rr = MessageBox.Show(sshprocinfo.Arguments, "Click OK to run vncviewer...", MessageBoxButtons.OKCancel);
+            var rr = MessageBox.Show(sshexe+" "+ sshprocinfo.Arguments, "Click OK to run vncviewer...", MessageBoxButtons.OKCancel);
             if (rr == DialogResult.Cancel)
             {
                 try { sshproc.Kill(); }
